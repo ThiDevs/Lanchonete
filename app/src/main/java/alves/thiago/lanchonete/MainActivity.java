@@ -1,5 +1,6 @@
 package alves.thiago.lanchonete;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,18 +9,21 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
-    //Button button = findViewById(R.id.button);
+    Button botao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        botao = (Button) findViewById(R.id.button);
 
+        botao.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
 
-       // button.setOnClickListener(new View.OnClickListener() {
-      //      public void onClick(View v) {
-       //         Log.e("Teste","Teste");
-       //     }
-      //  });
+                Intent it = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(it);
+
+            }
+        });
 
 
     }
