@@ -9,17 +9,28 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
     AlertDialog.Builder alertDialogBuilder = null;
+
+    EditText Quantidade;
+    EditText Colaborador;
+    EditText Setor;
+    Spinner s;
+    List<String> item;
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,16 +38,22 @@ public class Main2Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Button Finalizar;
         Finalizar = (Button) findViewById(R.id.Finalizar);
-        EditText Quantidade = (EditText) findViewById(R.id.Quantidade);
-        final EditText Colaborador = (EditText) findViewById(R.id.Colaborador);
-        final EditText Setor = (EditText) findViewById(R.id.Setor);
+        Setor = (EditText) findViewById(R.id.Setor);
+        Colaborador = (EditText) findViewById(R.id.Colaborador);
+        Quantidade = (EditText) findViewById(R.id.Quantidade);
+
+
+
+       s = (Spinner) findViewById(R.id.spinner);
+
+
 
         Thread Get_Clientes = new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
 
-                    String SERVER_IP = "172.16.4.64";//editText.getText().toString();
+                    String SERVER_IP = "192.168.1.6";//editText.getText().toString();
                     InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
                     Socket socket = new Socket(serverAddr, 7070);
@@ -46,21 +63,48 @@ public class Main2Activity extends AppCompatActivity {
                     BufferedReader br = new BufferedReader(isr);
 
                     String message = br.readLine();
-
                     System.out.println("Message received from the server : " + message);
+
+                    item = new ArrayList<String>();
+                    item.add(message);
+
+                    while (message != null){
+                        message = br.readLine();
+                        if (message != null) {
+                            System.out.println("Message received from the server : " + message);
+                            item.add(message);
+                        }
+
+                    }
+
+
 
                    // socket.getOutputStream().write(itemValue.getBytes());
                     //socket.getOutputStream().flush();
                     //socket.close();
 
                 }catch (Exception e ){
+                    e.printStackTrace();
 
                 }
 
             }
         });
-        Get_Clientes.start();
 
+        Get_Clientes.start();
+        try {
+            Get_Clientes.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String[] stockArr = new String[item.size()];
+        stockArr = item.toArray(stockArr);
+
+
+
+        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, stockArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        s.setAdapter(adapter);
 
 
 
