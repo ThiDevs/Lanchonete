@@ -53,7 +53,7 @@ public class Main2Activity extends AppCompatActivity {
             public void run() {
                 try{
 
-                    String SERVER_IP = "192.168.1.6";//editText.getText().toString();
+                    String SERVER_IP = "172.16.4.64";//editText.getText().toString();
                     InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
                     Socket socket = new Socket(serverAddr, 7070);
