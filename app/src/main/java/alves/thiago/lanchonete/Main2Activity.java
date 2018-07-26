@@ -1,5 +1,6 @@
 package alves.thiago.lanchonete;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +46,7 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
-       s = (Spinner) findViewById(R.id.spinner);
+       s = (Spinner) findViewById(R.id.spinner2);
 
 
 
@@ -105,6 +107,10 @@ public class Main2Activity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, stockArr);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s.setAdapter(adapter);
+        SpinnerActivity(s);
+       // s.setOnItemSelectedListener();
+
+
 
 
 
@@ -140,5 +146,19 @@ public class Main2Activity extends AppCompatActivity {
         });
 
     }
+
+    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view,
+                                   int pos, long id) {
+            // An item was selected. You can retrieve the selected item using
+            System.out.println(parent.getItemAtPosition(pos));
+        }
+
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Another interface callback
+        }
+    }
+
 
 }
