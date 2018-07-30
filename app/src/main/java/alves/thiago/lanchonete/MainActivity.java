@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -68,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-
-
-
-
                     String[] a = ip.split("[.]");
 
 
@@ -88,12 +87,31 @@ public class MainActivity extends AppCompatActivity {
                             Socket socket = new Socket();
                             socket.connect(new InetSocketAddress(hostIP, 7070), 100);
 
+
+
+
+                            InputStream is = socket.getInputStream();
+                            InputStreamReader isr = new InputStreamReader(is);
+                            BufferedReader br = new BufferedReader(isr);
+
+                            String message = br.readLine();
+                            System.out.println("Message received from the server : " + message);
+
+
+
                             socket.close();
                             setIP(hostIP);
+
                             break;
                         } catch (Exception e) {
 
                         }
+
+
+
+
+
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -101,7 +119,32 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        AchaServer.start();
+        //AchaServer.start();
+        setIP("172.16.3.112");
+        Thread teste = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket();
+                    hostIP = "172.16.3.112";
+                    socket.connect(new InetSocketAddress(hostIP, 7070), 100);
+
+
+                    InputStream is = socket.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader br = new BufferedReader(isr);
+
+                    String message = br.readLine();
+                    System.out.println("Message received from the server : " + message);
+
+
+                    socket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        teste.start();
 
 
 

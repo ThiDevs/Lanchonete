@@ -146,14 +146,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
                             socket.close();
                         } catch (Exception e) {
                             e.printStackTrace();
