@@ -19,7 +19,9 @@ import android.widget.Spinner;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,9 @@ public class Main2Activity extends AppCompatActivity {
     EditText Setor;
     Spinner s;
     List<String> item;
+    List<String> item2;
     ArrayAdapter<String> adapter;
+    String hostIP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,18 +48,20 @@ public class Main2Activity extends AppCompatActivity {
         Colaborador = (EditText) findViewById(R.id.Colaborador);
         Quantidade = (EditText) findViewById(R.id.Quantidade);
 
+        hostIP = MainActivity.getIP();
+        System.out.println(hostIP);
+
 
 
        s = (Spinner) findViewById(R.id.spinner2);
 
 
-
-        Thread Get_Clientes = new Thread(new Runnable() {
+            Thread Get_Clientes = new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
 
-                    String SERVER_IP = "172.16.4.64";//editText.getText().toString();
+                    String SERVER_IP = hostIP;//editText.getText().toString();
                     InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
                     Socket socket = new Socket(serverAddr, 7070);
@@ -81,10 +87,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
-                   // socket.getOutputStream().write(itemValue.getBytes());
-                    //socket.getOutputStream().flush();
-                    //socket.close();
-
                 }catch (Exception e ){
                     e.printStackTrace();
 
@@ -107,8 +109,66 @@ public class Main2Activity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, stockArr);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s.setAdapter(adapter);
-        SpinnerActivity(s);
-       // s.setOnItemSelectedListener();
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, final int position, long id) {
+                System.out.println();
+
+                final String Tipo = parentView.getItemAtPosition(position).toString();
+                Thread SendTipo = new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            Socket socket = new Socket(hostIP, 7071);
+                            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+                            writer.write(Tipo);
+                            writer.flush();
+                            writer.close();
+
+
+                            InputStream is = socket.getInputStream();
+                            InputStreamReader isr = new InputStreamReader(is);
+                            BufferedReader br = new BufferedReader(isr);
+
+                            String message = br.readLine();
+                            System.out.println("Message received from the server : " + message);
+
+                            item2 = new ArrayList<String>();
+                            item2.add(message);
+
+                            while (message != null){
+                                message = br.readLine();
+                                if (message != null) {
+                                    System.out.println("Message received from the server : " + message);
+                                    item2.add(message);
+                                }
+
+                            }
+
+
+
+
+
+
+
+
+
+
+
+                            socket.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }});
+                SendTipo.start();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
 
 
@@ -147,18 +207,6 @@ public class Main2Activity extends AppCompatActivity {
 
     }
 
-    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
-        public void onItemSelected(AdapterView<?> parent, View view,
-                                   int pos, long id) {
-            // An item was selected. You can retrieve the selected item using
-            System.out.println(parent.getItemAtPosition(pos));
-        }
-
-        public void onNothingSelected(AdapterView<?> parent) {
-            // Another interface callback
-        }
-    }
 
 
 }
