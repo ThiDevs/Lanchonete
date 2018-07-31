@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.io.BufferedReader;
@@ -24,7 +25,14 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import static android.R.layout.simple_list_item_1;
+import static android.R.layout.simple_list_item_2;
+import static android.R.layout.simple_spinner_dropdown_item;
+import static android.R.layout.simple_spinner_item;
 
 public class Main2Activity extends AppCompatActivity {
     AlertDialog.Builder alertDialogBuilder = null;
@@ -33,10 +41,16 @@ public class Main2Activity extends AppCompatActivity {
     EditText Colaborador;
     EditText Setor;
     Spinner s;
+    Spinner s2;
     List<String> item;
     List<String> item2;
     ArrayAdapter<String> adapter;
+    ListView listview;
+    //ArrayAdapter<String> adapter2;
+    List<String> value = new ArrayList<String>();
     String hostIP;
+    ArrayAdapter<String> adapter2;
+    Map<String, List<String>> MAP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +62,20 @@ public class Main2Activity extends AppCompatActivity {
         Colaborador = (EditText) findViewById(R.id.Colaborador);
         Quantidade = (EditText) findViewById(R.id.Quantidade);
 
+        MAP = MainActivity.getMAP();
         hostIP = MainActivity.getIP();
-        System.out.println(hostIP);
+        System.out.println(MAP);
+
+        listview  = (ListView) findViewById(R.id.list);
 
 
+        adapter2 = new ArrayAdapter<String>(this,simple_list_item_1, android.R.id.text1, value);
+        listview.setAdapter(adapter2);
 
-       s = (Spinner) findViewById(R.id.spinner2);
+
+       s = (Spinner) findViewById(R.id.spinner);
+
+
 
 
             Thread Get_Clientes = new Thread(new Runnable() {
@@ -95,63 +117,25 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
 
-        Get_Clientes.start();
+       // Get_Clientes.start();
         try {
             Get_Clientes.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String[] stockArr = new String[item.size()];
-        stockArr = item.toArray(stockArr);
+        String[] stockArr = new String[MAP.keySet().size()];
+        stockArr = MAP.keySet().toArray(stockArr);
 
-
-
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, stockArr);
+        adapter = new ArrayAdapter<String>(this, simple_spinner_item, stockArr);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s.setAdapter(adapter);
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, final int position, long id) {
-                System.out.println();
 
-                final String Tipo = parentView.getItemAtPosition(position).toString();
-                Thread SendTipo = new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            Socket socket = new Socket(hostIP, 7071);
-                            PrintWriter writer = new PrintWriter(socket.getOutputStream());
-                            writer.write(Tipo);
-                            writer.flush();
-                            writer.close();
+                String Tipo = parentView.getItemAtPosition(position).toString();
+                setItem(Tipo);
 
-
-                            InputStream is = socket.getInputStream();
-                            InputStreamReader isr = new InputStreamReader(is);
-                            BufferedReader br = new BufferedReader(isr);
-
-                            String message = br.readLine();
-                            System.out.println("Message received from the server : " + message);
-
-                            item2 = new ArrayList<String>();
-                            item2.add(message);
-
-                            while (message != null){
-                                message = br.readLine();
-                                if (message != null) {
-                                    System.out.println("Message received from the server : " + message);
-                                    item2.add(message);
-                                }
-
-                            }
-
-
-
-                            socket.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }});
-                SendTipo.start();
 
             }
 
@@ -162,8 +146,21 @@ public class Main2Activity extends AppCompatActivity {
 
         });
 
+        listview.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+
+                        String itemValue = (String) listview.getItemAtPosition(position);
+                        Thread EnviarIndexVideo = new Thread(new Runnable() {
+                            public void run() {
 
 
+                            }
+
+                        });
+                    }
+                });
 
 
 
@@ -194,6 +191,26 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
+            }
+        });
+
+    }
+
+    public void setItem(String Tipo){
+
+
+       // String[] stockArr2 = new String[MAP.get(Tipo).size()];
+       // stockArr2 = MAP.keySet().toArray(stockArr2);
+
+      //  value.addAll(Arrays.asList(stockArr2));
+
+
+
+
+       runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
             }
         });
 

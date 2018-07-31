@@ -7,9 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -17,12 +23,16 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
     Button botao;
     String hostIP;
     static String IP;
+    static Map<String, List<String>> MAP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println("Message received from the server : " + message);
 
 
-
                             socket.close();
                             setIP(hostIP);
 
@@ -127,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Socket socket = new Socket();
                     hostIP = "172.16.3.112";
-                    socket.connect(new InetSocketAddress(hostIP, 7070), 100);
+                    socket.connect(new InetSocketAddress(hostIP, 7070), 1000);
 
 
                     InputStream is = socket.getInputStream();
@@ -136,6 +145,13 @@ public class MainActivity extends AppCompatActivity {
 
                     String message = br.readLine();
                     System.out.println("Message received from the server : " + message);
+
+                    Type mapType = new TypeToken<Map<String, List<String>>>(){}.getType();
+                    Map<String, List<String>> son = new Gson().fromJson(message, mapType);
+                    setMAP(son);
+                    for ( String key : son.keySet() ) {
+                        System.out.println(key);
+                    }
 
 
                     socket.close();
@@ -155,6 +171,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public static String getIP(){
         return IP;
+    }
+    public void setMAP( Map<String, List<String>> map){
+        MAP = map;
+    }
+    public static Map<String, List<String>> getMAP(){
+        return MAP;
     }
 
 }
