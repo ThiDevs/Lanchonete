@@ -68,10 +68,26 @@ public class Main2Activity extends AppCompatActivity {
 
         listview  = (ListView) findViewById(R.id.list);
         value = new ArrayList<String>();
+        value.add("");
 
 
-        adapter2 = new ArrayAdapter<String>(this,simple_list_item_1, android.R.id.text1, value);
+        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
         listview.setAdapter(adapter2);
+
+
+
+
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter2.notifyDataSetChanged();
+                }
+            });
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+
 
 
        s = (Spinner) findViewById(R.id.spinner);
@@ -147,12 +163,12 @@ public class Main2Activity extends AppCompatActivity {
 
         });
 
-        listview.setOnItemClickListener(
+       /* listview.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 
-                        String itemValue = (String) listview.getItemAtPosition(position);
+                        //String itemValue = (String) listview.getItemAtPosition(position);
                         Thread EnviarIndexVideo = new Thread(new Runnable() {
                             public void run() {
 
@@ -160,9 +176,11 @@ public class Main2Activity extends AppCompatActivity {
                             }
 
                         });
+
+
                     }
                 });
-
+*/
 
 
         Finalizar.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +221,8 @@ public class Main2Activity extends AppCompatActivity {
             String[] stockArr2 = new String[MAP.get(Tipo).size()];
             stockArr2 = MAP.keySet().toArray(stockArr2);
 
+
+
             value.addAll(Arrays.asList(stockArr2));
         } catch (Exception e ){
             e.printStackTrace();
@@ -211,12 +231,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
-       runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        });
 
     }
 

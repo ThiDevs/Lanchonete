@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Socket socket = new Socket();
                     hostIP = "172.16.3.112";
-                    socket.connect(new InetSocketAddress(hostIP, 7070), 1000);
+                    socket.connect(new InetSocketAddress(hostIP, 7070), 10000);
 
 
                     InputStream is = socket.getInputStream();
