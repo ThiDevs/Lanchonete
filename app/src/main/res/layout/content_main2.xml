@@ -13,85 +13,124 @@
         android:id="@+id/Colaborador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:contentDescription="Nome do Colaborador"
         android:ems="10"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="62dp" />
+        app:layout_constraintBottom_toTopOf="@+id/Setor"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/Setor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:contentDescription="Setor"
         android:ems="10"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="122dp" />
+        app:layout_constraintBottom_toTopOf="@+id/list"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="16dp"
         android:text="Cadastrar novo Fiado"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="106dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintBottom_toTopOf="@+id/Colaborador"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/Quantidade"
-        android:layout_width="108dp"
+        android:layout_width="0dp"
         android:layout_height="38dp"
         android:contentDescription="Quantidade"
         android:ems="10"
         android:inputType="numberDecimal"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="236dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Valor"
+        app:layout_constraintStart_toStartOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Valor"
         android:layout_width="69dp"
         android:layout_height="37dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
         android:text="Valor"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="237dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/list"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
         android:text="Eu aceito e os termos de uso"
-        tools:layout_editor_absoluteX="11dp"
-        tools:layout_editor_absoluteY="472dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/Finalizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginStart="29dp"
         android:text="Ok"
-        tools:layout_editor_absoluteX="252dp"
-        tools:layout_editor_absoluteY="455dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ink"
+        app:layout_constraintStart_toEndOf="@+id/checkBox" />
 
     <com.simplify.ink.InkView
         android:id="@+id/ink"
         android:layout_width="368dp"
         android:layout_height="130dp"
+        android:layout_marginBottom="68dp"
+        android:layout_marginTop="68dp"
         android:background="#e5d7d7"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="305dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/Finalizar"
+        app:layout_constraintEnd_toEndOf="@+id/Valor"
+        app:layout_constraintStart_toEndOf="@+id/Valor"
+        app:layout_constraintTop_toTopOf="@+id/Valor" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="178dp"
         android:layout_height="30dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="186dp" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/Quantidade"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Setor" />
 
     <ListView
         android:id="@+id/list"
-        android:layout_width="174dp"
+        android:layout_width="0dp"
         android:layout_height="120dp"
-        tools:layout_editor_absoluteX="202dp"
-        tools:layout_editor_absoluteY="176dp" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/Valor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="@+id/Valor" />
 
 </android.support.constraint.ConstraintLayout>

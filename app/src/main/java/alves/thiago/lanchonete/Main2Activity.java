@@ -47,7 +47,7 @@ public class Main2Activity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     ListView listview;
     //ArrayAdapter<String> adapter2;
-    List<String> value = new ArrayList<String>();
+    List<String> value;
     String hostIP;
     ArrayAdapter<String> adapter2;
     Map<String, List<String>> MAP;
@@ -67,6 +67,7 @@ public class Main2Activity extends AppCompatActivity {
         System.out.println(MAP);
 
         listview  = (ListView) findViewById(R.id.list);
+        value = new ArrayList<String>();
 
 
         adapter2 = new ArrayAdapter<String>(this,simple_list_item_1, android.R.id.text1, value);
@@ -198,11 +199,14 @@ public class Main2Activity extends AppCompatActivity {
 
     public void setItem(String Tipo){
 
+        try {
+            String[] stockArr2 = new String[MAP.get(Tipo).size()];
+            stockArr2 = MAP.keySet().toArray(stockArr2);
 
-       // String[] stockArr2 = new String[MAP.get(Tipo).size()];
-       // stockArr2 = MAP.keySet().toArray(stockArr2);
-
-      //  value.addAll(Arrays.asList(stockArr2));
+            value.addAll(Arrays.asList(stockArr2));
+        } catch (Exception e ){
+            e.printStackTrace();
+        }
 
 
 
