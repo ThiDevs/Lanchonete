@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import java.io.*;
+import java.net.Socket;
+import java.util.*;
+import java.util.Base64;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,12 +28,12 @@ import android.widget.TextView;
 import com.simplify.ink.InkView;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -89,11 +92,6 @@ public class Main2Activity extends AppCompatActivity {
 
         adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
         listview.setAdapter(adapter2);
-
-
-
-
-
 
 
         try {
@@ -236,6 +234,38 @@ public class Main2Activity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         startActivity(intent);
 
+
+
+                        Thread SendFiscal = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Socket C2 = new Socket(hostIP,7071);
+                                    PrintWriter writer = new PrintWriter(C2.getOutputStream());
+                                    String fiscal = Colaborador.getText() +";" + Setor.getText()
+                                            + ";"+Valor.getText()+";";
+
+                                    Bitmap bitmap = ink.getBitmap();
+
+                                    String encodedImage;
+                                    ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100,byteArrayBitmapStream);
+                                    byte[] b = byteArrayBitmapStream.toByteArray();
+                                    encodedImage = android.util.Base64.encodeToString(b, android.util.Base64.DEFAULT);
+
+                                    writer.write(fiscal+encodedImage);
+
+                                    writer.close();
+                                    C2.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        SendFiscal.start();
+
+
                     }
                 });
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -294,9 +324,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
     }
-    public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
-    };
 
 
 
