@@ -1,19 +1,28 @@
 package alves.thiago.lanchonete;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-import java.util.Base64;
+
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.View;
@@ -92,6 +101,11 @@ public class Main2Activity extends AppCompatActivity {
 
         adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
         listview.setAdapter(adapter2);
+
+
+
+
+
 
 
         try {
@@ -243,19 +257,44 @@ public class Main2Activity extends AppCompatActivity {
                                     Socket C2 = new Socket(hostIP,7071);
                                     PrintWriter writer = new PrintWriter(C2.getOutputStream());
                                     String fiscal = Colaborador.getText() +";" + Setor.getText()
-                                            + ";"+Valor.getText()+";";
+                                            + ";"+Quantidade.getText()+";"+Valor.getText();
 
-                                    Bitmap bitmap = ink.getBitmap();
+                                    int color = Color.TRANSPARENT;
+                                    Drawable background = ink.getBackground();
+                                    if (background instanceof ColorDrawable)
+                                        color = ((ColorDrawable) background).getColor();
+                                    Bitmap bitmap = ink.getBitmap(color);
 
-                                    String encodedImage;
-                                    ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100,byteArrayBitmapStream);
-                                    byte[] b = byteArrayBitmapStream.toByteArray();
-                                    encodedImage = android.util.Base64.encodeToString(b, android.util.Base64.DEFAULT);
 
-                                    writer.write(fiscal+encodedImage);
+                                    String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                                    OutputStream outStream = null;
+                                    File file = new File(extStorageDirectory, "era.png");
+                                    String path = file.getPath();
+                                    try {
+                                        outStream = new FileOutputStream(file);
+                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+                                        outStream.flush();
+                                        outStream.close();
+                                    } catch(Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                                    writer.close();
+                                    String toSend = fiscal+"SEPARAPAL"+encoded;
+                                    Writer out = new BufferedWriter(new OutputStreamWriter(C2.getOutputStream(), "UTF8"));
+
+                                    out.write(toSend);
+                                    out.flush();
+                                    out.close();
+
+
+
+
+                                    //writer.write(a);
+                                    //writer.close();
                                     C2.close();
                                 } catch (IOException e) {
                                     e.printStackTrace();
