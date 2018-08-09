@@ -23,7 +23,7 @@ import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button botao;
+
     String hostIP;
     static String IP;
     static Map<String, List<String>> MAP;
@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        botao = (Button) findViewById(R.id.button);
+        Button botao,botao2;
+        botao = findViewById(R.id.button);
 
         botao.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
@@ -42,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        botao2 = findViewById(R.id.button2);
+
+        botao2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
+
+                Intent it = new Intent(MainActivity.this, Main3Activity.class);
+                startActivity(it);
+
+            }
+        });
 
 
 
@@ -52,13 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
 
 
-
                     String ip = null;
                     try {
                         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                         while (interfaces.hasMoreElements()) {
                             NetworkInterface iface = interfaces.nextElement();
-                            // filters out 127.0.0.1 and inactive interfaces
                             if (iface.isLoopback() || !iface.isUp())
                                 continue;
 
@@ -75,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+                    assert ip != null;
                     String[] a = ip.split("[.]");
 
 
@@ -91,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
                             Socket socket = new Socket();
                             socket.connect(new InetSocketAddress(hostIP, 7070), 100);
 
-
-
-
                             InputStream is = socket.getInputStream();
                             InputStreamReader isr = new InputStreamReader(is);
                             BufferedReader br = new BufferedReader(isr);
@@ -109,12 +116,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
 
                         }
-
-
-
-
-
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -123,15 +124,14 @@ public class MainActivity extends AppCompatActivity {
 
         });
         //AchaServer.start();
-        setIP("172.16.3.112");
+        setIP("192.168.15.132");
         Thread teste = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Socket socket = new Socket();
-                    hostIP = "172.16.3.112";
+                    hostIP = "192.168.15.132";
                     socket.connect(new InetSocketAddress(hostIP, 7070), 10000);
-
 
                     InputStream is = socket.getInputStream();
                     InputStreamReader isr = new InputStreamReader(is);
@@ -143,12 +143,8 @@ public class MainActivity extends AppCompatActivity {
                     Type mapType = new TypeToken<Map<String, List<String>>>(){}.getType();
                     Map<String, List<String>> son = new Gson().fromJson(message, mapType);
                     setMAP(son);
-                    for ( String key : son.keySet() ) {
-                        System.out.println(key);
-                    }
-
-
                     socket.close();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

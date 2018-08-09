@@ -55,58 +55,40 @@ import static android.R.layout.simple_spinner_dropdown_item;
 import static android.R.layout.simple_spinner_item;
 
 public class Main2Activity extends AppCompatActivity {
-    AlertDialog.Builder alertDialogBuilder = null;
-
     TextView Quantidade;
-    EditText Colaborador;
-    EditText Setor;
+    EditText Colaborador,Setor;
     TextView Valor;
     Spinner s;
-    List<String> item;
-    List<String> item2;
-    ArrayAdapter<String> adapter;
+    List<String> item,value;
+    ArrayAdapter<String> adapter,adapter2;
     ListView listview;
-    List<String> value;
     String hostIP;
-    ArrayAdapter<String> adapter2;
     Map<String, List<String>> MAP;
     HashMap<String, Integer> items;
     Intent intent;
     InkView ink;
-    GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Button Finalizar,Limpar_Dados;
-        Finalizar = (Button) findViewById(R.id.Finalizar);
-        Limpar_Dados = (Button) findViewById(R.id.Limpar_Dados);
-        Setor = (EditText) findViewById(R.id.Setor);
-        Colaborador = (EditText) findViewById(R.id.Colaborador);
-        Quantidade = (TextView) findViewById(R.id.Quantidade);
-        Valor = (TextView) findViewById(R.id.Valor);
-        ink = (InkView) findViewById(R.id.ink);
-
+        Finalizar =  findViewById(R.id.Finalizar);
+        Limpar_Dados =  findViewById(R.id.Limpar_Dados);
+        Setor =  findViewById(R.id.Setor);
+        Colaborador =  findViewById(R.id.Colaborador);
+        Quantidade =  findViewById(R.id.Quantidade);
+        Valor =  findViewById(R.id.Valor);
+        ink =  findViewById(R.id.ink);
         MAP = MainActivity.getMAP();
         hostIP = MainActivity.getIP();
-        System.out.println(MAP);
-
-        listview  = (ListView) findViewById(R.id.list);
-        value = new ArrayList<String>();
+        listview  =  findViewById(R.id.list);
+        value = new ArrayList<>();
         value.add("");
-        items = new HashMap<String, Integer>();
+        items = new HashMap<>();
         intent = new Intent(this, MainActivity.class);
-
-        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
+        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, value);
         listview.setAdapter(adapter2);
-
-
-
-
-
-
 
         try {
             runOnUiThread(new Runnable() {
@@ -119,68 +101,19 @@ public class Main2Activity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-       s = (Spinner) findViewById(R.id.spinner);
+       s = findViewById(R.id.spinner);
 
-
-            Thread Get_Clientes = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-
-                    String SERVER_IP = hostIP;//editText.getText().toString();
-                    InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
-
-                    Socket socket = new Socket(serverAddr, 7070);
-
-                    InputStream is = socket.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(isr);
-
-                    String message = br.readLine();
-                    System.out.println("Message received from the server : " + message);
-
-                    item = new ArrayList<String>();
-                    item.add(message);
-
-                    while (message != null){
-                        message = br.readLine();
-                        if (message != null) {
-                            System.out.println("Message received from the server : " + message);
-                            item.add(message);
-                        }
-
-                    }
-
-
-
-                }catch (Exception e ){
-                    e.printStackTrace();
-
-                }
-
-            }
-        });
-
-       // Get_Clientes.start();
-        try {
-            Get_Clientes.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String[] stockArr = new String[MAP.keySet().size()];
         stockArr = MAP.keySet().toArray(stockArr);
 
-        adapter = new ArrayAdapter<String>(this, simple_spinner_item, stockArr);
+        adapter = new ArrayAdapter<>(this, simple_spinner_item, stockArr);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s.setAdapter(adapter);
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, final int position, long id) {
-
                 String Tipo = parentView.getItemAtPosition(position).toString();
                 setItem(Tipo);
-
-
             }
 
             @Override
@@ -210,8 +143,6 @@ public class Main2Activity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
-
                         if (Valor.getText().toString().equals("Valor")){
                             Valor.setText("0");
                         }
@@ -224,13 +155,7 @@ public class Main2Activity extends AppCompatActivity {
                             Valor.setText(String.valueOf(valortotal));
 
                             Quantidade.setText(items.toString().replaceAll("[{]","").replaceAll("[}]",""));
-
-
-
                         }
-
-
-
                     }
                 });
 
@@ -248,16 +173,13 @@ public class Main2Activity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         startActivity(intent);
 
-
-
                         Thread SendFiscal = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     Socket C2 = new Socket(hostIP,7071);
                                     PrintWriter writer = new PrintWriter(C2.getOutputStream());
-                                    String fiscal = Colaborador.getText() +";" + Setor.getText()
-                                            + ";"+Quantidade.getText()+";"+Valor.getText();
+                                    String fiscal = Colaborador.getText() +";" + Setor.getText() + ";"+Quantidade.getText()+";"+Valor.getText();
 
                                     int color = Color.TRANSPARENT;
                                     Drawable background = ink.getBackground();
@@ -265,37 +187,17 @@ public class Main2Activity extends AppCompatActivity {
                                         color = ((ColorDrawable) background).getColor();
                                     Bitmap bitmap = ink.getBitmap(color);
 
-
-                                    String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                                    OutputStream outStream = null;
-                                    File file = new File(extStorageDirectory, "era.png");
-                                    String path = file.getPath();
-                                    try {
-                                        outStream = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-                                        outStream.flush();
-                                        outStream.close();
-                                    } catch(Exception e) {
-                                        e.printStackTrace();
-                                    }
                                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                                     byte[] byteArray = byteArrayOutputStream .toByteArray();
                                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
                                     String toSend = fiscal+"SEPARAPAL"+encoded;
                                     Writer out = new BufferedWriter(new OutputStreamWriter(C2.getOutputStream(), "UTF8"));
-
                                     out.write(toSend);
                                     out.flush();
                                     out.close();
-
-
-
-
-                                    //writer.write(a);
-                                    //writer.close();
                                     C2.close();
+
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -303,7 +205,6 @@ public class Main2Activity extends AppCompatActivity {
                             }
                         });
                         SendFiscal.start();
-
 
                     }
                 });
@@ -315,9 +216,6 @@ public class Main2Activity extends AppCompatActivity {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-
-
             }
         });
 
@@ -334,15 +232,11 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void setItem(String Tipo){
-
         try {
             String[] stockArr2 = new String[MAP.get(Tipo).size()];
             stockArr2 = MAP.get(Tipo).toArray(stockArr2);
-
             Log.d("MyApp",MAP.toString());
-
             value.clear();
-
             value.addAll(Arrays.asList(stockArr2));
         } catch (Exception e ){
             e.printStackTrace();
@@ -358,12 +252,5 @@ public class Main2Activity extends AppCompatActivity {
         }catch (Exception e ){
             e.printStackTrace();
         }
-
-
-
-
     }
-
-
-
 }
