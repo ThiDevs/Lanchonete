@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -42,16 +44,29 @@ public class Main3Activity extends AppCompatActivity {
     ConstraintLayout Layout;
     ListView listview;
     List<CardView> value;
-    ArrayAdapter<CardView> adapter2;
+    CardsAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
+
         Layout = findViewById(R.id.layout);
 
         IP = MainActivity.getIP();
-        listview  =  findViewById(R.id.list);
+        //listview  =  findViewById(R.id.list);
+
+
+
+        ListView lvCards = (ListView) findViewById(R.id.list);
+        adapter = new CardsAdapter(this);
+
+        lvCards.setAdapter(adapter);
+
+
+
+
+        /*
         value = new ArrayList<>();
 
         value.add(new CardView(this));
@@ -70,7 +85,7 @@ public class Main3Activity extends AppCompatActivity {
         }
 
 
-
+*/
 
 
         Thread teste = new Thread(new Runnable() {
@@ -92,7 +107,13 @@ public class Main3Activity extends AppCompatActivity {
 
 
                     Log.d("MyApp", list.get(0));
-                    CreateCard(list.get(0));
+
+                    for (int i = 0; i != list.size(); i++){
+                        adapter.add(new CardModel(list.get(i),"Eu sou KK"));
+
+                    }
+
+
 
 
 
@@ -139,16 +160,7 @@ public class Main3Activity extends AppCompatActivity {
         // Put the TextView in CardView
         card.addView(tv);
         value.add(card);
-        try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter2.notifyDataSetChanged();
-                }
-            });
-        }catch (Exception e ){
-            e.printStackTrace();
-        }
+
         // Finally, add the CardView in root layout
         //Layout.addView(card);
 

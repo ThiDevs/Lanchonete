@@ -124,13 +124,13 @@ public class MainActivity extends AppCompatActivity {
 
         });
         //AchaServer.start();
-        setIP("192.168.15.132");
+        setIP("172.16.3.112");
         Thread teste = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Socket socket = new Socket();
-                    hostIP = "192.168.15.132";
+                    hostIP = "172.16.3.112";
                     socket.connect(new InetSocketAddress(hostIP, 7070), 10000);
 
                     InputStream is = socket.getInputStream();
