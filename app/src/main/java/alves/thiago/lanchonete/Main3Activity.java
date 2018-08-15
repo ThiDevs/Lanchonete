@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -17,23 +15,12 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -54,8 +41,6 @@ public class Main3Activity extends AppCompatActivity {
         Layout = findViewById(R.id.layout);
 
         IP = MainActivity.getIP();
-        //listview  =  findViewById(R.id.list);
-
 
 
         ListView lvCards = (ListView) findViewById(R.id.list);
@@ -63,29 +48,6 @@ public class Main3Activity extends AppCompatActivity {
 
         lvCards.setAdapter(adapter);
 
-
-
-
-        /*
-        value = new ArrayList<>();
-
-        value.add(new CardView(this));
-        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, value);
-        listview.setAdapter(adapter2);
-
-        try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter2.notifyDataSetChanged();
-                }
-            });
-        }catch (Exception e ){
-            e.printStackTrace();
-        }
-
-
-*/
 
 
         Thread teste = new Thread(new Runnable() {
